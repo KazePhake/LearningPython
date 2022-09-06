@@ -21,7 +21,7 @@ with requests.Session() as s:
     #in our subsequesnt requests we are reusing the same session we have been using from the very beginning
     r = s.get(url).text
     #print(r.status_code)
-    sourceF = open('web.xlxs', 'w')
+    sourceF = open('web.txt', 'w')
     #print(r.text, file=sourceF)
 
 #html_data = requests.get(url).text
@@ -31,10 +31,11 @@ amazon_data = pd.DataFrame(columns=["Name", "Role", "Group", "Access"])
 for row in soup1.find("tbody").find_all("tr"):
     col = row.find_all("th")
     name = col[0].text
+        
     col = row.find_all("td")
-    role = col[1].text
-    group = col[2].text 
-    access = col[3].text
+    role = col[0].text
+    group = col[1].text 
+    access = col[2].text
     amazon_data = amazon_data.append({"Name":name, "Role":role, "Group":group, "Access":access}, ignore_index=True)
     
     # tmp = amazon_data
@@ -46,5 +47,7 @@ for row in soup1.find("tbody").find_all("tr"):
     
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
     print(amazon_data, file=sourceF)
+    
+amazon_data.to_excel (r'web.xlsx', index = False, header=True)
 
 #print(amazon_data, file=sourceF)
